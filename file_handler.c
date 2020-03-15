@@ -20,14 +20,11 @@
 #include "file_handler.h"
 
 volatile long int passwords = 0;
+static int average = 0;
+static int tries = 0;
 
 void *show_speed(void *p)
 {
-#ifdef BENCHMARK
-    int speeds[30];
-    int i = 0;
-    int average = 0;
-#endif
     long count1, count2;
     (void)p;
     
@@ -39,16 +36,8 @@ void *show_speed(void *p)
 
         printf("Speed: \x1b[32;1m%ld\x1b[0m passwords/sec\r", count2 - count1);
         fflush(stdout);
-#ifdef BENCHMARK
-        speeds[i] = count2 - count1;
-        average += speeds[i];
-        i++;
-
-        if(i == 30) {
-            printf("Average speed: %d\n\n", average / 30);
-            i = 0;
-        }
-#endif
+        average += (count2 - count1);
+        tries++;
     }
 
     return NULL;
@@ -135,7 +124,9 @@ static int process_file(const char *filename, unsigned char *digest_to_search)
     // Stop progress thread
     pthread_cancel(id);
 
+    // Show statistics
     printf("\nPasswords tried: %ld\n", passwords);
+    printf("Average speed: %d passwords/second\n\n", average / tries);
 
     return found;
 }

@@ -7,15 +7,19 @@
 # Benchmark results
 <table>
     <tr>
-        <th>OS</td>
-        <th>Memory (RAM)</td>
-        <th>CPU</td>
-        <th>Passwords/second (average)</td>
+        <th><font color="cyan">OS</font></th>
+        <th><font color="red">Memory (RAM)</font></th>
+        <th><font color="green">CPU</font></th>
+        <th><font color="lime">Passwords/second (average)</font></th>
+        <th><font color="pink">Wordlist size</font></th>
+        <th><font color="orange">Password length</font></th>
     </tr>
     <tr>
-    <td>Linux Debian 5.4.19 x86_64</td>
-    <td>8GB</td>
-    <td>Intel(R) Core(TM) i5-4590S CPU @ 3.00GHz</td>
-    <td>2224846</td>
+        <td style="text-align:center">Linux Debian 5.4.19 x86_64</td>
+        <td style="text-align:center">8GB</td>
+        <td style="text-align:center">Intel(R) Core(TM) i5-4590S CPU @ 3.00GHz</td>
+        <td style="text-align:center">3182086</td>
+        <td style="text-align:center">10 GB</td>
+        <td style="text-align:center">8-9 chars</td>
     </tr>
 </table>
