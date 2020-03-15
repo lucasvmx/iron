@@ -5,8 +5,6 @@
     ./mdcrack -h <password hash> -d <dictionary file>
 
 # Benchmark results
-
-**OS**: Linux Debian 5.4.19 x86_64
 <table>
     <tr>
         <th>OS</td>
