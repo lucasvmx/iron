@@ -74,13 +74,10 @@ int main(int argc, char **argv)
     // Convert hex md5 hash to a default md5 hash
     for(int i = 0, j = 0; i < (MD5_DIGEST_LENGTH * 2); i += 2, j++)
     {
-        char hex[3];
-        unsigned char num;
+        unsigned int value;
 
-        snprintf(hex, sizeof(hex), "%c%c", hex_md5[i], hex_md5[i+1]);
-        num = (unsigned char)strtol(hex, NULL, 16);
-
-        md5[j] = (unsigned char)num;
+        sscanf(&hex_md5[i], "%02x", &value);
+        md5[j] = (unsigned char)value;
     }
 
     printf("Cracking ...\n");
