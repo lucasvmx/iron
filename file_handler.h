@@ -1,6 +1,6 @@
 /**
  * @file file_handler.h
- * @author your name (you@domain.com)
+ * @author Lucas Vieira (lucas.engen.cc@gmail.com)
  * @brief 
  * @version 0.1
  * @date 2020-03-14
@@ -13,10 +13,10 @@
 #define FILE_HANDLER_H
 
 /**
- * @brief Tamanho máximo de uma senha
+ * @brief Tamanho máximo da senha
  * 
  */
-#define MAX_PASSWORD_LEN    128
+#define MAX_PASSWORD_LEN    256
 
 /**
  * @brief Procura por uma senha no dicionário especificado

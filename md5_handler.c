@@ -1,7 +1,7 @@
 /**
  * @file md5_handler.c
  * @author Lucas Vieira (lucas.engen.cc@gmail.com)
- * @brief 
+ * @brief Message digest related functions
  * @version 0.1
  * @date 2020-03-14
  * 
@@ -21,6 +21,7 @@ unsigned char digest[MD5_LEN + 1];
 
 static void md5_begin()
 {
+    // Initialize only when necessary
     if(!initialized && MD5_Init(&context))
     {
         initialized = true;
@@ -30,6 +31,7 @@ static void md5_begin()
 
 static void md5_cleanup()
 {
+    // Copy digest to buffer and cleanup resources
     MD5_Final(digest, &context);
     initialized = false;
 }
