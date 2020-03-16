@@ -1,3 +1,5 @@
+![C/C++ CI](https://github.com/lucas-engen/mdcrack/workflows/C/C++%20CI/badge.svg)
+
 # MDCrack
 * A simple message digest password cracker
 
