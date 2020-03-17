@@ -13,6 +13,7 @@
 #define MD5_HANDLER_H
 
 #define MD5_LEN             16
+#define MD5_HASH_LEN        32
 #define MD5_HEX_HASH_LEN    (MD5_LEN * 2) + 1
 
 extern unsigned char *md5_digest(char *password, unsigned int len);

@@ -16,7 +16,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <inttypes.h>
+#include <ctype.h>
 #include "file_handler.h"
+#include "md5_handler.h"
 
 #define MAX_FILENAME    260
 #define EXAMPLE_HASH    "e3f5c287696333b41bdff72dc48d4054"
@@ -34,7 +36,7 @@ int main(int argc, char **argv)
     char dictionary[MAX_FILENAME];
     unsigned char md5[MD5_DIGEST_LENGTH]; 
     bool have_md5 = false, have_dict = false;
-
+    
     // Parse command line arguments
     while((opt = getopt(argc, argv, ":h:d:")) != -1)
     {
@@ -43,10 +45,25 @@ int main(int argc, char **argv)
             case 'h':
                 if(optarg != NULL)
                 {
+                    // Test for MD5 hash length
                     if(strlen(optarg) != (MD5_DIGEST_LENGTH * 2))
                     {
                         printf("Invalid MD5 hash detected\n");
                         return 1;
+                    }
+
+                    // Test for MD5 hash validity
+                    int i = 0;
+                    char c;
+
+                    while((c = tolower(optarg[i])))
+                    {
+                        if(!(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'f'))
+                        {
+                            printf("Invalid MD5 hash detected\n");
+                            return 1;
+                        }
+                        i++;
                     }
 
                     strncpy(hex_md5, optarg, sizeof(hex_md5));
