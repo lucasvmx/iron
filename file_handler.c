@@ -16,12 +16,15 @@
 #include <stdbool.h>
 #include <memory.h>
 #include <pthread.h>
+#include <sys/stat.h>
 #include "md5_handler.h"
 #include "file_handler.h"
+#include "memory_handler.h"
 
-volatile long int passwords = 0;
-static int average = 0;
-static int tries = 0;
+long int passwords = 0;
+long int average = 0;
+long int tries = 0;
+long int time_spent = 0;
 
 void *show_speed(void *p)
 {
@@ -33,6 +36,7 @@ void *show_speed(void *p)
         count1 = passwords;
         sleep(1);
         count2 = passwords;
+        time_spent++;
 
         printf("Speed: \x1b[32;1m%ld\x1b[0m passwords/sec\r", count2 - count1);
         fflush(stdout);
@@ -43,9 +47,18 @@ void *show_speed(void *p)
     return NULL;
 }
 
-static FILE *open_file_tr(const char *filename)
+static inline FILE *open_file_tr(const char *filename)
 {
-    return fopen(filename, "r");
+    FILE *fp = NULL;
+
+    fp = fopen(filename, "r");
+    if(!fp)
+    {
+        fprintf(stderr, "Failed to open '%s': %s\n", filename, strerror(errno));
+        return NULL;
+    }
+
+    return fp;
 }
 
 static int process_file(const char *filename, unsigned char *digest_to_search)
@@ -53,32 +66,36 @@ static int process_file(const char *filename, unsigned char *digest_to_search)
     int ch;
     int counter = 0;
     char buffer[MAX_PASSWORD_LEN + 1];
-    long eof;
     bool found = false;
     pthread_t id;
-    long bytes_readed = 0;
     FILE *fp = NULL;
+    struct stat fileinfo;
+    long eof, bytes_readed = 0;
 
     // Try to open the file for reading
     fp = open_file_tr(filename);
-    
+
     if(!fp)
-    {
-        printf("Failed to open the file \"%s\": %d (%s)\n", filename, errno, strerror(errno));
         return 1;
-    }
+
+    // Initialize memory
+    memset(&fileinfo, 0, sizeof(struct stat));
+
+    // Get file information
+    fstat(fp->_fileno, &fileinfo);
     
-    // Calculate EOF position
-    fseek(fp, 0, SEEK_END);
-    eof = ftell(fp);
-    fseek(fp, 0, SEEK_SET);
+    // Save filesize
+    eof = fileinfo.st_size;
+
+    // Display file information to user
+    fprintf(stdout, "Filesize: %ld bytes\n", eof);
 
     // Display progress 
     pthread_create(&id, NULL, show_speed, NULL);
 
     // Copy line content into a buffer
-    do
-    {        
+    while(bytes_readed <= eof)
+    {         
         ch = fgetc(fp);
 
         // Maybe a windows line ending
@@ -93,7 +110,7 @@ static int process_file(const char *filename, unsigned char *digest_to_search)
             // Compare password hash
             unsigned char *hash = md5_digest(buffer, counter);
 
-            if(memcmp(hash, digest_to_search, MD5_LEN) == 0)
+            if(iron_memcmp(hash, digest_to_search, MD5_LEN) == 0)
             {
                 printf("\nPassword FOUND: \x1b[32;1m%s\x1b[0m\n", buffer);
                 found = true;
@@ -116,7 +133,7 @@ static int process_file(const char *filename, unsigned char *digest_to_search)
         buffer[counter] = ch;
         counter++;
         bytes_readed++;
-    } while(bytes_readed != eof);
+    }
 
     // Close file
     fclose(fp);
@@ -126,7 +143,10 @@ static int process_file(const char *filename, unsigned char *digest_to_search)
 
     // Show statistics
     printf("\nPasswords tried: %ld\n", passwords);
-    printf("Average speed: %d passwords/second\n\n", average / tries);
+    printf("Time spent: %ld seconds\n", time_spent);
+
+    if(tries > 0)
+        printf("Average speed: %.2f passwords/second\n", (double)(average / tries));
 
     return found;
 }
