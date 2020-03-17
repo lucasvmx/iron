@@ -19,7 +19,7 @@ static MD5_CTX context;
 static bool initialized = false;
 unsigned char digest[MD5_LEN + 1];
 
-static void md5_begin()
+static inline void md5_begin()
 {
     // Initialize only when necessary
     if(!initialized && MD5_Init(&context))
@@ -29,14 +29,14 @@ static void md5_begin()
     }
 }
 
-static void md5_cleanup()
+static inline void md5_cleanup()
 {
     // Copy digest to buffer and cleanup resources
     MD5_Final(digest, &context);
     initialized = false;
 }
 
-static void md5_calculate(char *data, unsigned int len)
+static inline void md5_calculate(char *data, unsigned int len)
 {
     md5_begin();
     MD5_Update(&context, data, len);

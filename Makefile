@@ -1,7 +1,7 @@
 sources=*.c
 warnings=-Wall -Wextra
 libs=`pkg-config --cflags --libs openssl` -lpthread
-output=mdcrack
+output=iron
 options=-o $(output)
 
 .PHONY: benchmark

@@ -27,4 +27,12 @@
  */
 extern int crack_password(const char *dict, unsigned char *password_md5);
 
+/**
+ * @brief Obtém o tamanho total de um arquivo
+ * 
+ * @param fp Ponteiro para o arquivo
+ * @return long Tamanho total do arquivo
+ */
+//extern long get_filesize(FILE **fp);
+
 #endif

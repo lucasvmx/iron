@@ -1,10 +1,10 @@
 ![C/C++ CI](https://github.com/lucas-engen/mdcrack/workflows/C/C++%20CI/badge.svg)
 
 # MDCrack
-* A simple message digest password cracker
+* A simple password cracker
 
 # Usage:
-    ./mdcrack -h <password hash> -d <dictionary file>
+    ./iron -h <password hash> -d <dictionary file>
 
 # Benchmark results
 <table>
