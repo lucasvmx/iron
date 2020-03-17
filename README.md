@@ -1,4 +1,6 @@
-# MDCrack
+![C/C++ CI](https://github.com/lucas-engen/iron/workflows/C/C++%20CI/badge.svg?branch=dev)
+
+# Iron
 * A simple password cracker
 
 # Usage:
