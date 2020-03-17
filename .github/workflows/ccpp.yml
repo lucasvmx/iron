@@ -7,7 +7,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  build:
+  test-iron:
 
     runs-on: ubuntu-latest
     
@@ -17,10 +17,8 @@ jobs:
       run: sudo apt install crunch
     - name: generate-wordlist
       run: 
-          if [ ! -e "wordlist.dat" ]; then crunch 9 9 0123456789 -o wordlist.dat; else echo "File exists"; fi
+          if [ ! -e "wordlist.dat" ]; then crunch 8 8 0123456789 -o wordlist.dat; else echo "File exists"; fi
     - name: make
       run: make
-    - name: make benchmark
-      run: make benchmark
     - name: test
       run: ./iron -h 9F84FFBDC1319543B91DF8EB21D5DE3B -d wordlist.dat
