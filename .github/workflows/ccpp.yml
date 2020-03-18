@@ -17,11 +17,7 @@ jobs:
       run: sudo apt install crunch
     - name: generate-wordlist
       run: 
-          if [ ! -e "wordlist.dat" ]; then\n
-            \tcrunch 10 10 abcd012345 -o wordlist.dat\n
-          else\n
-            echo "File exists"\n
-          fi
+          if [ ! -e "wordlist.dat" ]; then crunch 10 10 abcd012345 -o wordlist.dat; else echo "File exists"; fi
     - name: make
       run: make
     - name: make benchmark
