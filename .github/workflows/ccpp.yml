@@ -13,9 +13,18 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: install-crunch
+      run: sudo apt install crunch
+    - name: generate-wordlist
+      run: 
+          if [ ! -e "wordlist.dat" ]; then
+            crunch 10 10 abcd012345 -o wordlist.dat
+          else
+            echo "File exists"
+          fi
     - name: make
       run: make
     - name: make benchmark
       run: make benchmark
     - name: test
-      run: ./mdcrack -h 9F84FFBDC1319543B91DF8EB21D5DE3B -d unknown_file.txt
+      run: ./iron -h 9F84FFBDC1319543B91DF8EB21D5DE3B -d wordlist.dat
