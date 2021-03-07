@@ -2,7 +2,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/lucas-engen/iron/badge)](https://www.codefactor.io/repository/github/lucas-engen/iron)
 
 # Iron
-* A simple password cracker
+* A simple password cracker. If you are looking for more complete solutions, take a look at [John the Ripper](https://github.com/openwall/john)
 
 # Usage:
     ./iron -h <password hash> -d <dictionary file> -t <algorithm>
