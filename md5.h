@@ -9,12 +9,10 @@
  * 
  */
 
-#ifndef MD5_HANDLER_H
-#define MD5_HANDLER_H
+#ifndef MD5_HEADER
+#define MD5_HEADER
 
-#define MD5_LEN             16
-#define MD5_HASH_LEN        32
-#define MD5_HEX_HASH_LEN    (MD5_LEN * 2) + 1
+#include <openssl/md5.h>
 
 /**
  * @brief Gets the MD5 digest from the string
@@ -23,6 +21,6 @@
  * @param len String length
  * @return unsigned char* MD5 digest
  */
-extern unsigned char *md5_digest(char *password, unsigned int len);
+extern unsigned char *md5_digest(unsigned char *password, unsigned int len);
 
 #endif

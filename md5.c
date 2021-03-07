@@ -9,7 +9,7 @@
  * 
  */
 
-#include "md5_handler.h"
+#include "md5.h"
 #include <openssl/md5.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@
 
 static MD5_CTX context;
 static bool initialized = false;
-unsigned char digest[MD5_LEN + 1];
+unsigned char digest[MD5_DIGEST_LENGTH + 1];
 
 static inline void md5_begin()
 {
@@ -36,17 +36,17 @@ static inline void md5_cleanup()
     initialized = false;
 }
 
-static inline void md5_calculate(char *data, unsigned int len)
+static inline void md5_calculate(unsigned char *data, unsigned int len)
 {
     md5_begin();
     MD5_Update(&context, data, len);
     md5_cleanup();
 }
 
-unsigned char *md5_digest(char *password, unsigned int len)
+unsigned char *md5_digest(unsigned char *password, unsigned int len)
 {
     md5_calculate(password, len);
-    digest[MD5_LEN] = '\0';
+    digest[MD5_DIGEST_LENGTH] = '\0';
 
     return &digest[0];
 }

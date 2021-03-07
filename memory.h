@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef MEMORY_H
-#define MEMORY_H
+#ifndef MEMORY_HEADER
+#define MEMORY_HEADER
 
 /**
  * @brief Compare two blocks of memory

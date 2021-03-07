@@ -1,4 +1,4 @@
-![C/C++ CI](https://github.com/lucas-engen/iron/workflows/C/C++%20CI/badge.svg?branch=dev)
+![C/C++ CI](https://github.com/lucas-engen/mdcrack/workflows/C/C++%20CI/badge.svg)
 
 # Iron
 * A simple password cracker
