@@ -18,6 +18,10 @@ jobs:
     - name: Build
       run: make
     - name: Test SHA-1
-      run: ./iron -h 3ffbffb9855e24faacc53a186bdd387142e75bd3 -d rockyou.txt -t SHA1
+      run: |
+        ./iron -h 3ffbffb9855e24faacc53a186bdd387142e75bd3 -d rockyou.txt -t SHA1
+        ./iron -h 094b763b4cfcc0b05e5d040581cd513c3ca08067 -d rockyou.txt -t SHA1
     - name: Test MD5
-      run: ./iron -h 5d61cd72e5a14814f3ac6fccf903e031 -d rockyou.txt -t MD5
+      run: |
+        ./iron -h 5d61cd72e5a14814f3ac6fccf903e031 -d rockyou.txt -t MD5
+        ./iron -h d8f4a1993546cc4b850cde3599e27aec -d rockyou.txt -t MD5
