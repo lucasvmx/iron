@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include "md5.h"
 #include "sha1.h"
-#include "io.h"
+#include "crack.h"
 #include "memory.h"
 #include "logger.h"
 
@@ -33,6 +33,7 @@ long int tries = 0;
 // Time spent (in seconds)
 long int time_spent = 0;
 long int time_spent_ms = 0;
+static bool can_stop = false;
 
 void *show_speed(void *p)
 {
@@ -42,7 +43,7 @@ void *show_speed(void *p)
 
     fprintf(stdout, "\n");
 
-    while(true)
+    while(!can_stop)
     {
         long passwords_tried = 0;
 
@@ -64,10 +65,14 @@ void *show_speed(void *p)
             count2 = passwords;
             pthread_mutex_unlock(&mutex);
             passwords_tried += count2 - count1;
+
+            if(can_stop)
+                break;
         }
         
         // 1 second has been passed
-        time_spent++;
+        if(time_spent_ms == 1000)
+            time_spent++;
 
         printf("Speed: \x1b[32;1m%ld\x1b[0m passwords/sec\r", passwords_tried);
         fflush(stdout);
@@ -80,6 +85,16 @@ void *show_speed(void *p)
     fprintf(stdout, "\n");
 
     return NULL;
+}
+
+static void stop_progress_thread(pthread_t thread)
+{
+    int *exit_status;
+
+    print(INFO, "Stopping ...");
+    can_stop = true;
+    pthread_join(thread, &exit_status);
+    print(OK, "Stopped");
 }
 
 static inline FILE *open_file_tr(const char *filename)
@@ -102,11 +117,11 @@ static inline int process_file(const char *filename, unsigned char *digest_to_se
     int counter = 0;
     char buffer[MAX_PASSWORD_LEN + 1];
     bool found = false;
-    pthread_t id;
     FILE *fp = NULL;
     struct stat fileinfo;
     long eof, bytes_readed = 0;
     size_t digest_length = 0;
+    pthread_t progress_thread_id;
 
     switch(alg_id)
     {
@@ -138,10 +153,10 @@ static inline int process_file(const char *filename, unsigned char *digest_to_se
         panic("Failed to create mutex: %s", strerror(errno));
 
     // Display progress 
-    pthread_create(&id, NULL, show_speed, NULL);
+    pthread_create(&progress_thread_id, NULL, show_speed, NULL);
 
     // Copy line content into a buffer
-    while(bytes_readed <= eof)
+    while((bytes_readed <= eof) && !(found))
     {         
         ch = fgetc(fp);
 
@@ -162,12 +177,11 @@ static inline int process_file(const char *filename, unsigned char *digest_to_se
             } else if(alg_id == ID_SHA1) {
                 hash = sha1_digest((unsigned char*)buffer, counter);
             }
-            
+
             if(iron_memcmp(hash, digest_to_search, digest_length) == 0)
             {
                 print(OK, "Password FOUND: %s", buffer);
                 found = true;
-                break;
             }
 
             // Reset counter
@@ -195,14 +209,25 @@ static inline int process_file(const char *filename, unsigned char *digest_to_se
 
     // Stop progress thread and close mutex
     pthread_mutex_destroy(&mutex);
-    pthread_cancel(id);
+    stop_progress_thread(progress_thread_id);
 
     // Show statistics
-    print(INFO, "\nPasswords tried: %ld", passwords);
-    print(INFO, "Time spent: ~%ld seconds (~%ld milisseconds)", time_spent, time_spent_ms);
+    print(INFO, "Passwords tried: %ld", passwords);
+    if(time_spent < 1) {
+        print(INFO, "Time spent: %ld millisseconds", time_spent_ms);
+    } else {
+        print(INFO, "Time spent: %ld seconds (%ld millisseconds)", time_spent, time_spent_ms);
+    }
 
     if(tries > 0)
-        print(INFO, "Average speed: %.2f passwords/second", (double)(average / tries));
+    {
+        if(time_spent > 1)
+            print(INFO, "Average speed: %.2f passwords/second", (double)(average / tries));
+        else {
+            double speed = passwords / (double)(time_spent_ms / 1000.0);
+            print(INFO, "Average speed: %.2f passwords/second", speed);
+        }
+    }
 
     return found;
 }

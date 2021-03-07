@@ -1,24 +1,27 @@
 name: C/C++ CI
 
-on:
-  push:
-    branches: [ dev ]
-  pull_request:
-    branches: [ master ]
+on: [push, pull_request]
 
 jobs:
-  test-iron:
+  build:
 
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
-    - name: install-crunch
-      run: sudo apt install crunch
-    - name: generate-wordlist
-      run: 
-          if [ ! -e "wordlist.dat" ]; then crunch 8 8 0123456789 -o wordlist.dat; else echo "File exists"; fi
-    - name: make
+    - name: Install crunch
+      run: sudo apt install -y crunch
+    - name: Download Wordlist
+      run: |
+        curl https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/wordlists/rockyou.txt.gz -o rockyou.txt.gz
+        gzip -d rockyou.txt.gz
+    - name: Build
       run: make
-    - name: test
-      run: ./iron -h 9F84FFBDC1319543B91DF8EB21D5DE3B -d wordlist.dat
+    - name: Test SHA-1
+      run: |
+        ./iron -h 3ffbffb9855e24faacc53a186bdd387142e75bd3 -d rockyou.txt -t SHA1
+        ./iron -h 094b763b4cfcc0b05e5d040581cd513c3ca08067 -d rockyou.txt -t SHA1
+    - name: Test MD5
+      run: |
+        ./iron -h 5d61cd72e5a14814f3ac6fccf903e031 -d rockyou.txt -t MD5
+        ./iron -h d8f4a1993546cc4b850cde3599e27aec -d rockyou.txt -t MD5

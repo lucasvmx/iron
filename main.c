@@ -20,7 +20,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <assert.h>
-#include "io.h"
+#include "crack.h"
 #include "util.h"
 #include "logger.h"
 #include "main.h"
@@ -140,8 +140,8 @@ int main(int argc, char **argv)
     }
 
     // Allocate memory to store hash data
-    hex_hash = (char*)calloc(sizeof(char), hash_len);
-    hash = (unsigned char*)calloc(sizeof(unsigned char), hash_len / 2);
+    hex_hash = (char*)calloc(sizeof(char), hex_hash_len);
+    hash = (unsigned char*)calloc(sizeof(unsigned char), hash_len);
 
     if(hex_hash == NULL || hash == NULL)
         panic("Failed to allocate memory: %s", strerror(errno));
