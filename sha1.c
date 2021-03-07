@@ -4,26 +4,23 @@
 #include "sha1.h"
 #include "logger.h"
 
-SHA_CTX ctx;
-static bool initialized = false;
+static SHA_CTX ctx;
 unsigned char sha_digest[SHA_DIGEST_LENGTH];
 
 static inline void sha1_begin()
 {
-    if(!initialized) {
-        if(!SHA1_Init(&ctx)) {
-            panic("Failed to initialize SHA1 context");
-        }
-        
-        bzero(sha_digest, sizeof(sha_digest));
-        initialized = true;
+    if(!SHA1_Init(&ctx)) {
+        panic("Failed to initialize SHA1 context");
     }
+    
+    memset(sha_digest, 0, sizeof(sha_digest));  
 }
 
 static inline void sha1_cleanup()
 {
-    SHA1_Final(sha_digest, &ctx);
-    initialized = false;
+    if(!SHA1_Final(sha_digest, &ctx)) {
+        panic("Failed to calculate sha1_final");
+    }
 }
 
 static inline void sha1_calculate(unsigned char *data, size_t len)
