@@ -9,23 +9,27 @@
  * 
  */
 
-#ifndef FILE_HANDLER_H
-#define FILE_HANDLER_H
+#ifndef IO_HEADER
+#define IO_HEADER
+
+#include "main.h"
+
 
 /**
- * @brief Tamanho máximo da senha
+ * @brief Maximum password size
  * 
  */
 #define MAX_PASSWORD_LEN    256
 
 /**
- * @brief Procura por uma senha no dicionário especificado
+ * @brief 
  * 
- * @param dict  Arquivo de dicionário
- * @param password_md5 MD5 hash da senha a ser procurada
+ * @param dict 
+ * @param password_md5 
+ * @param id 
  * @return int 
  */
-extern int crack_password(const char *dict, unsigned char *password_md5);
+extern int crack_password(const char *dict, unsigned char *password_md5, enum algorithm_ids id);
 
 /**
  * @brief Obtém o tamanho total de um arquivo
