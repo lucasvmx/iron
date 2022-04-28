@@ -1,5 +1,5 @@
 ![C/C++ CI](https://github.com/lucas-engen/mdcrack/workflows/C/C++%20CI/badge.svg)
-[![CodeFactor](https://www.codefactor.io/repository/github/lucas-engen/iron/badge)](https://www.codefactor.io/repository/github/lucas-engen/iron)
+[![CodeFactor](https://www.codefactor.io/repository/github/lucasvmx/iron/badge)](https://www.codefactor.io/repository/github/vmx/iron)
 
 # Iron
 * A simple password cracker. If you are looking for more complete solutions, take a look at [John the Ripper](https://github.com/openwall/john)
