@@ -14,8 +14,8 @@
 
 inline int iron_memcmp(const void *p1, const void *p2, int count)
 {
-    unsigned char *a1 = (char*)p1;
-    unsigned char *a2 = (char*)p2;
+    unsigned char *a1 = (unsigned char*)p1;
+    unsigned char *a2 = (unsigned char*)p2;
     int i = 0;
 
     // Stops only in the limit
